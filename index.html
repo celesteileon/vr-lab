@@ -1,31 +1,58 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Sephora Virtual Fragrance Experience</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sephora | Virtual Fragrance Experience</title>
+
   <script src="https://aframe.io/releases/1.8.0/aframe.min.js"></script>
 
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    #instructions {
+      position: fixed;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,.82);
+      color: white;
+      padding: 12px 22px;
+      border-radius: 5px;
+      font-size: 13px;
+      letter-spacing: 1px;
+      z-index: 10;
+      text-align: center;
+    }
+  </style>
+
   <script>
-    AFRAME.registerComponent('try-perfume', {
+    // Interactive fragrance experience
+    AFRAME.registerComponent('fragrance-interaction', {
       init: function () {
         this.el.addEventListener('click', () => {
-          const message = document.querySelector('#scent-message');
-          const bottle = document.querySelector('#perfume-bottle');
-          const particles = document.querySelector('#scent-particles');
+          document.querySelector('#scent-panel')
+            .setAttribute('visible', true);
 
-          message.setAttribute('value',
-            'YSL LIBRE\\nYour virtual fragrance experience is activated!\\n\\nImagine notes of lavender, orange blossom\\nand warm vanilla.\\n\\nDiscover your signature scent.'
-          );
+          document.querySelector('#scent-particles')
+            .setAttribute('visible', true);
+        });
+      }
+    });
 
-          particles.setAttribute('visible', true);
+    // Close the fragrance experience
+    AFRAME.registerComponent('close-experience', {
+      init: function () {
+        this.el.addEventListener('click', () => {
+          document.querySelector('#scent-panel')
+            .setAttribute('visible', false);
 
-          bottle.setAttribute('animation', {
-            property: 'position',
-            to: '0 2.5 -5',
-            dur: 1000,
-            dir: 'alternate',
-            loop: 2
-          });
+          document.querySelector('#scent-particles')
+            .setAttribute('visible', false);
         });
       }
     });
@@ -33,176 +60,572 @@
 </head>
 
 <body>
-<a-scene background="color: #f5f0ec">
+
+<div id="instructions">
+  WALK: W A S D &nbsp; | &nbsp; LOOK: MOUSE &nbsp; | &nbsp; INTERACT: CLICK
+</div>
+
+<a-scene
+  renderer="antialias: true; colorManagement: true; physicallyCorrectLights: true"
+  shadow="type: pcfsoft"
+  background="color: #f4f4f4">
+
+  <!-- ASSETS -->
+  <a-assets>
+    <img id="yslAd" src="ysl.jpg">
+  </a-assets>
 
   <!-- LIGHTING -->
-  <a-entity light="type: ambient; intensity: 1.2"></a-entity>
-  <a-entity light="type: point; intensity: 1.5"
-            position="0 5 -4"></a-entity>
+  <a-entity light="type: ambient; color: #ffffff; intensity: 0.8"></a-entity>
 
-  <!-- STORE FLOOR -->
-  <a-plane position="0 0 -5"
+  <a-entity light="type: directional; intensity: 1.1; castShadow: true"
+            position="-3 9 5"></a-entity>
+
+  <a-entity light="type: point; intensity: 1.5; distance: 20"
+            position="0 6 -8"></a-entity>
+
+  <a-entity light="type: point; intensity: 1.2; distance: 15"
+            position="-5 5 2"></a-entity>
+
+  <a-entity light="type: point; intensity: 1.2; distance: 15"
+            position="5 5 2"></a-entity>
+
+  <!-- ================================================= -->
+  <!-- STORE ARCHITECTURE -->
+  <!-- ================================================= -->
+
+  <!-- FLOOR -->
+  <a-plane position="0 0 -3"
            rotation="-90 0 0"
-           width="14" height="20"
-           color="#eeeeee"></a-plane>
+           width="18" height="34"
+           color="#e8e8e8"
+           material="roughness: 0.18; metalness: 0.08"
+           shadow="receive: true"></a-plane>
 
-  <!-- WALLS -->
-  <a-box position="0 3 -11"
-         width="14" height="6" depth="0.2"
-         color="#ffffff"></a-box>
-
-  <a-box position="-7 3 -5"
-         width="0.2" height="6" depth="12"
-         color="#ffffff"></a-box>
-
-  <a-box position="7 3 -5"
-         width="0.2" height="6" depth="12"
-         color="#ffffff"></a-box>
-
-  <!-- SEPHORA SIGN -->
-  <a-text value="SEPHORA"
-          position="-1.5 4.8 -10.85"
-          color="#000000"
-          width="8"
-          align="center"
-          scale="2 2 2"></a-text>
-
-  <a-text value="BEAUTY BEGINS HERE"
-          position="-1.5 4.2 -10.8"
-          color="#333333"
-          width="5"
-          align="center"></a-text>
-
-  <!-- LEFT BEAUTY SHELVES -->
-  <a-box position="-5 1.5 -4"
-         width="2.5" height="3"
-         depth="0.5" color="#222222"></a-box>
-
-  <a-box position="-5 0.8 -3.7"
-         width="2.6" height="0.1"
-         depth="0.8" color="#ffffff"></a-box>
-
-  <a-box position="-5 1.8 -3.7"
-         width="2.6" height="0.1"
-         depth="0.8" color="#ffffff"></a-box>
-
-  <a-box position="-5 2.8 -3.7"
-         width="2.6" height="0.1"
-         depth="0.8" color="#ffffff"></a-box>
-
-  <!-- RIGHT BEAUTY SHELVES -->
-  <a-box position="5 1.5 -4"
-         width="2.5" height="3"
-         depth="0.5" color="#222222"></a-box>
-
-  <a-box position="5 0.8 -3.7"
-         width="2.6" height="0.1"
-         depth="0.8" color="#ffffff"></a-box>
-
-  <a-box position="5 1.8 -3.7"
-         width="2.6" height="0.1"
-         depth="0.8" color="#ffffff"></a-box>
-
-  <a-box position="5 2.8 -3.7"
-         width="2.6" height="0.1"
-         depth="0.8" color="#ffffff"></a-box>
-
-  <!-- CENTER YSL ADVERTISEMENT -->
-  <a-box position="0 2.8 -9"
-         width="5" height="4"
-         depth="0.15"
+  <!-- BLACK AND WHITE CHECKOUT / ENTRY DETAILS -->
+  <a-box position="0 0.08 12"
+         width="18" height="0.16" depth="0.3"
          color="#111111"></a-box>
 
-  <a-plane position="0 2.8 -8.9"
-           width="4.7" height="3.7"
-           color="#d5b18a"></a-plane>
+  <!-- BACK WALL -->
+  <a-box position="0 3.75 -20"
+         width="18" height="7.5" depth="0.3"
+         color="#ffffff"></a-box>
 
-  <a-text value="YVES SAINT LAURENT"
-          position="0 4.1 -8.8"
+  <!-- LEFT WALL -->
+  <a-box position="-9 3.75 -3"
+         width="0.3" height="7.5" depth="34"
+         color="#ffffff"></a-box>
+
+  <!-- RIGHT WALL -->
+  <a-box position="9 3.75 -3"
+         width="0.3" height="7.5" depth="34"
+         color="#ffffff"></a-box>
+
+  <!-- FRONT STORE WALLS WITH OPEN ENTRANCE -->
+  <a-box position="-6.5 3.5 13"
+         width="5" height="7" depth="0.3"
+         color="#ffffff"></a-box>
+
+  <a-box position="6.5 3.5 13"
+         width="5" height="7" depth="0.3"
+         color="#ffffff"></a-box>
+
+  <!-- CEILING -->
+  <a-plane position="0 7.5 -3"
+           rotation="90 0 0"
+           width="18" height="34"
+           color="#ffffff"></a-plane>
+
+  <!-- FRONT STOREFRONT GLASS -->
+  <a-box position="-4 2.5 12.85"
+         width="0.08" height="5" depth="0.08"
+         color="#cccccc"></a-box>
+
+  <a-box position="4 2.5 12.85"
+         width="0.08" height="5" depth="0.08"
+         color="#cccccc"></a-box>
+
+  <a-box position="0 5 12.85"
+         width="8" height="0.08" depth="0.08"
+         color="#cccccc"></a-box>
+
+  <!-- ================================================= -->
+  <!-- SEPHORA BRANDING -->
+  <!-- ================================================= -->
+
+  <a-box position="0 6.2 12.65"
+         width="7" height="1.5" depth="0.25"
+         color="#111111"></a-box>
+
+  <a-text value="SEPHORA"
+          position="0 6.15 12.49"
+          align="center"
+          color="#ffffff"
+          width="12"
+          letter-spacing="5"></a-text>
+
+  <!-- Back wall branding -->
+  <a-text value="SEPHORA"
+          position="0 6.3 -19.79"
+          align="center"
           color="#111111"
+          width="12"
+          letter-spacing="4"></a-text>
+
+  <a-text value="BEAUTY IS YOURS"
+          position="0 5.65 -19.78"
           align="center"
-          width="6"></a-text>
+          color="#555555"
+          width="5"></a-text>
 
-  <a-text value="LIBRE"
-          position="0 3.5 -8.8"
-          color="#111111"
-          align="center"
-          width="7"></a-text>
+  <!-- ================================================= -->
+  <!-- CEILING LIGHTS -->
+  <!-- ================================================= -->
 
-  <a-text value="THE NEW FRAGRANCE OF FREEDOM"
-          position="0 3.1 -8.8"
-          color="#222222"
-          align="center"
-          width="3.5"></a-text>
+  <a-entity position="0 7.25 0">
+    <a-box position="-6 0 0"
+           width="0.15" height="0.08" depth="24"
+           color="#ffffff"
+           material="emissive: #ffffff; emissiveIntensity: 1"></a-box>
 
-  <!-- PERFUME BOTTLE DISPLAY -->
-  <a-entity id="perfume-bottle"
-            position="0 1.8 -8.5">
+    <a-box position="6 0 0"
+           width="0.15" height="0.08" depth="24"
+           color="#ffffff"
+           material="emissive: #ffffff; emissiveIntensity: 1"></a-box>
 
-    <!-- Bottle -->
-    <a-box width="0.8" height="1.2" depth="0.3"
-           color="#d6b68c"
-           material="metalness: 0.5; roughness: 0.2"></a-box>
-
-    <!-- Bottle cap -->
-    <a-box position="0 0.7 0"
-           width="0.35" height="0.2" depth="0.3"
-           color="#111111"></a-box>
-
-    <a-text value="YSL"
-            position="0 0 0.17"
-            color="#111111"
-            align="center"
-            width="2"></a-text>
+    <a-box position="0 0 0"
+           width="0.12" height="0.08" depth="24"
+           color="#ffffff"
+           material="emissive: #ffffff; emissiveIntensity: 1"></a-box>
   </a-entity>
 
-  <!-- INTERACTIVE TRY-ON BUTTON -->
-  <a-box class="clickable"
-         try-perfume
-         position="0 0.7 -7"
-         width="2.2" height="0.6" depth="0.2"
-         color="#111111"></a-box>
+  <!-- ================================================= -->
+  <!-- LEFT BEAUTY DEPARTMENT -->
+  <!-- ================================================= -->
 
-  <a-text value="CLICK TO TRY THE SCENT"
-          position="0 0.7 -6.88"
+  <!-- SKINCARE DISPLAY -->
+  <a-box position="-7.6 2 -12"
+         width="2.1" height="4" depth="0.8"
+         color="#222222"></a-box>
+
+  <a-box position="-6.5 0.7 -12"
+         width="0.1" height="0.12" depth="1"
+         color="#ffffff"></a-box>
+
+  <a-box position="-6.5 1.8 -12"
+         width="0.1" height="0.12" depth="1"
+         color="#ffffff"></a-box>
+
+  <a-box position="-6.5 2.9 -12"
+         width="0.1" height="0.12" depth="1"
+         color="#ffffff"></a-box>
+
+  <a-text value="SKINCARE"
+          position="-7.55 4.3 -11.55"
           align="center"
           color="#ffffff"
           width="3"></a-text>
 
-  <!-- SCENT PARTICLES -->
-  <a-entity id="scent-particles" visible="false">
-    <a-sphere position="-0.8 2.5 -7.5"
-              radius="0.12" color="#f4d7a1"
-              animation="property: position; to: -1 3.5 -7.5; dur: 2000; loop: true; dir: alternate"></a-sphere>
+  <!-- SKINCARE PRODUCTS -->
+  <a-cylinder position="-7.5 1.1 -11.6"
+              radius="0.15" height="0.55"
+              color="#e6d8c5"></a-cylinder>
 
-    <a-sphere position="0.8 2.3 -7.5"
-              radius="0.15" color="#f4d7a1"
-              animation="property: position; to: 1 3.5 -7.5; dur: 2500; loop: true; dir: alternate"></a-sphere>
+  <a-cylinder position="-7 1.1 -12"
+              radius="0.13" height="0.55"
+              color="#ffffff"></a-cylinder>
 
-    <a-sphere position="0 2.7 -7.5"
-              radius="0.1" color="#ffffff"
-              animation="property: position; to: 0 3.8 -7.5; dur: 1800; loop: true; dir: alternate"></a-sphere>
-  </a-entity>
+  <a-cylinder position="-7.7 2.2 -12"
+              radius="0.16" height="0.55"
+              color="#d8d8d8"></a-cylinder>
 
-  <!-- EXPERIENCE MESSAGE -->
-  <a-text id="scent-message"
-          value="DISCOVER YOUR SIGNATURE SCENT"
-          position="0 0.2 -5"
+  <a-cylinder position="-7 2.2 -11.7"
+              radius="0.15" height="0.6"
+              color="#e9c5b8"></a-cylinder>
+
+  <a-cylinder position="-7.5 3.3 -11.8"
+              radius="0.16" height="0.5"
+              color="#ffffff"></a-cylinder>
+
+  <!-- MAKEUP DISPLAY -->
+  <a-box position="-7.6 2 -5"
+         width="2.1" height="4" depth="0.8"
+         color="#222222"></a-box>
+
+  <a-text value="MAKEUP"
+          position="-7.55 4.3 -4.55"
+          align="center"
+          color="#ffffff"
+          width="3"></a-text>
+
+  <!-- MAKEUP SHELVES -->
+  <a-box position="-6.5 1 -5"
+         width="0.1" height="0.1" depth="1"></a-box>
+
+  <a-box position="-6.5 2 -5"
+         width="0.1" height="0.1" depth="1"></a-box>
+
+  <a-box position="-6.5 3 -5"
+         width="0.1" height="0.1" depth="1"></a-box>
+
+  <!-- MAKEUP PRODUCTS -->
+  <a-cylinder position="-7.5 1.35 -4.8"
+              radius="0.1" height="0.5"
+              color="#b76e79"></a-cylinder>
+
+  <a-cylinder position="-7 1.35 -5"
+              radius="0.1" height="0.5"
+              color="#d9a5a5"></a-cylinder>
+
+  <a-cylinder position="-7.5 2.35 -5"
+              radius="0.12" height="0.55"
+              color="#8b4555"></a-cylinder>
+
+  <a-cylinder position="-7 2.35 -4.8"
+              radius="0.1" height="0.55"
+              color="#c59a72"></a-cylinder>
+
+  <!-- ================================================= -->
+  <!-- RIGHT BEAUTY DEPARTMENT -->
+  <!-- ================================================= -->
+
+  <!-- HAIRCARE -->
+  <a-box position="7.6 2 -12"
+         width="2.1" height="4" depth="0.8"
+         color="#222222"></a-box>
+
+  <a-text value="HAIRCARE"
+          position="7.55 4.3 -11.55"
+          align="center"
+          color="#ffffff"
+          width="3"></a-text>
+
+  <a-box position="8.5 1 -12"
+         width="0.1" height="0.12" depth="1"></a-box>
+
+  <a-box position="8.5 2 -12"
+         width="0.1" height="0.12" depth="1"></a-box>
+
+  <a-box position="8.5 3 -12"
+         width="0.1" height="0.12" depth="1"></a-box>
+
+  <a-cylinder position="7.5 1.35 -11.8"
+              radius="0.16" height="0.65"
+              color="#d5b68c"></a-cylinder>
+
+  <a-cylinder position="8 1.35 -12"
+              radius="0.16" height="0.65"
+              color="#ffffff"></a-cylinder>
+
+  <a-cylinder position="7.5 2.35 -12"
+              radius="0.16" height="0.65"
+              color="#d8d8d8"></a-cylinder>
+
+  <!-- FRAGRANCE DEPARTMENT -->
+  <a-box position="7.6 2 -5"
+         width="2.1" height="4" depth="0.8"
+         color="#222222"></a-box>
+
+  <a-text value="FRAGRANCE"
+          position="7.55 4.3 -4.55"
+          align="center"
+          color="#ffffff"
+          width="3"></a-text>
+
+  <a-box position="8.5 1 -5"
+         width="0.1" height="0.1" depth="1"></a-box>
+
+  <a-box position="8.5 2 -5"
+         width="0.1" height="0.1" depth="1"></a-box>
+
+  <a-box position="8.5 3 -5"
+         width="0.1" height="0.1" depth="1"></a-box>
+
+  <a-cylinder position="7.5 1.35 -4.8"
+              radius="0.16" height="0.55"
+              color="#d6b68c"></a-cylinder>
+
+  <a-cylinder position="8 1.35 -5"
+              radius="0.15" height="0.55"
+              color="#e9d5a5"></a-cylinder>
+
+  <a-cylinder position="7.5 2.35 -5"
+              radius="0.16" height="0.55"
+              color="#c9a7a0"></a-cylinder>
+
+  <!-- ================================================= -->
+  <!-- CENTRAL BEAUTY ISLANDS -->
+  <!-- ================================================= -->
+
+  <!-- MAKEUP COUNTER 1 -->
+  <a-box position="-3.5 0.8 2"
+         width="3.3" height="1.5" depth="2.2"
+         color="#181818"></a-box>
+
+  <a-box position="-3.5 1.58 2"
+         width="3.4" height="0.08" depth="2.3"
+         color="#ffffff"></a-box>
+
+  <a-text value="COMPLEXION"
+          position="-3.5 1.7 2"
           align="center"
           color="#111111"
+          rotation="-90 0 0"
+          width="3"></a-text>
+
+  <!-- PRODUCTS ON COUNTER 1 -->
+  <a-cylinder position="-4.5 1.85 1.7"
+              radius="0.16" height="0.5"
+              color="#c8a27d"></a-cylinder>
+
+  <a-cylinder position="-3.8 1.85 1.7"
+              radius="0.16" height="0.5"
+              color="#a87861"></a-cylinder>
+
+  <a-cylinder position="-3.1 1.85 1.7"
+              radius="0.16" height="0.5"
+              color="#e3c5a5"></a-cylinder>
+
+  <a-cylinder position="-2.5 1.85 1.7"
+              radius="0.16" height="0.5"
+              color="#d9b89b"></a-cylinder>
+
+  <!-- MAKEUP COUNTER 2 -->
+  <a-box position="3.5 0.8 2"
+         width="3.3" height="1.5" depth="2.2"
+         color="#181818"></a-box>
+
+  <a-box position="3.5 1.58 2"
+         width="3.4" height="0.08" depth="2.3"
+         color="#ffffff"></a-box>
+
+  <a-text value="BEAUTY ESSENTIALS"
+          position="3.5 1.7 2"
+          align="center"
+          color="#111111"
+          rotation="-90 0 0"
+          width="3"></a-text>
+
+  <!-- PRODUCTS ON COUNTER 2 -->
+  <a-cylinder position="2.5 1.85 1.7"
+              radius="0.13" height="0.5"
+              color="#bd7c80"></a-cylinder>
+
+  <a-cylinder position="3.2 1.85 1.7"
+              radius="0.13" height="0.5"
+              color="#d4a0a0"></a-cylinder>
+
+  <a-cylinder position="3.9 1.85 1.7"
+              radius="0.13" height="0.5"
+              color="#a76a6a"></a-cylinder>
+
+  <a-cylinder position="4.6 1.85 1.7"
+              radius="0.13" height="0.5"
+              color="#d9b68b"></a-cylinder>
+
+  <!-- ================================================= -->
+  <!-- CHECKOUT COUNTER -->
+  <!-- ================================================= -->
+
+  <a-box position="-5 1 -17"
+         width="5" height="2" depth="1.5"
+         color="#181818"></a-box>
+
+  <a-box position="-5 2.05 -17"
+         width="5.1" height="0.12" depth="1.6"
+         color="#ffffff"></a-box>
+
+  <a-text value="CHECKOUT"
+          position="-5 1.3 -16.22"
+          align="center"
+          color="#ffffff"
+          width="4"></a-text>
+
+  <!-- CHECKOUT SCREEN -->
+  <a-box position="-5 2.5 -17"
+         width="0.9" height="0.7" depth="0.15"
+         color="#333333"></a-box>
+
+  <a-plane position="-5 2.5 -16.91"
+           width="0.75" height="0.52"
+           color="#b8c9ce"></a-plane>
+
+  <!-- ================================================= -->
+  <!-- YSL LUXURY FRAGRANCE INSTALLATION -->
+  <!-- ================================================= -->
+
+  <!-- BLACK FEATURE WALL -->
+  <a-box position="4.5 3.3 -18.8"
+         width="7" height="6.2" depth="0.25"
+         color="#111111"></a-box>
+
+  <!-- GOLD ACCENT FRAME -->
+  <a-box position="4.5 3.4 -18.62"
+         width="6.4" height="5.7" depth="0.06"
+         color="#c5a36b"></a-box>
+
+  <a-box position="4.5 3.4 -18.55"
+         width="6.15" height="5.45" depth="0.06"
+         color="#111111"></a-box>
+
+  <!-- ACTUAL YSL ADVERTISEMENT -->
+  <a-plane position="4.5 3.55 -18.48"
+           width="5.8" height="5.05"
+           material="src: #yslAd; shader: flat; transparent: false"
+           class="interactive"
+           fragrance-interaction></a-plane>
+
+  <!-- ADVERTISEMENT INTERACTION PROMPT -->
+  <a-text value="DISCOVER YSL LIBRE"
+          position="4.5 0.55 -17.9"
+          align="center"
+          color="#d8bd8a"
           width="5"></a-text>
 
-  <!-- CAMERA AND MOVEMENT -->
-  <a-entity position="0 1.6 5">
-    <a-camera wasd-controls
-              look-controls
-              cursor="rayOrigin: mouse"
-              raycaster="objects: .clickable">
-    </a-camera>
+  <a-text value="CLICK THE AD TO EXPERIENCE THE FRAGRANCE"
+          position="4.5 0.15 -17.9"
+          align="center"
+          color="#ffffff"
+          width="3.5"></a-text>
+
+  <!-- YSL PERFUME DISPLAY STAND -->
+  <a-box position="4.5 0.65 -16"
+         width="3.5" height="1.3" depth="2"
+         color="#111111"></a-box>
+
+  <a-box position="4.5 1.34 -16"
+         width="3.6" height="0.1" depth="2.1"
+         color="#c5a36b"></a-box>
+
+  <!-- PERFUME BOTTLE -->
+  <a-entity position="4.5 2.15 -15.9">
+
+    <a-box width="0.85" height="1.25" depth="0.35"
+           color="#d7b77e"
+           material="metalness: 0.65; roughness: 0.15"></a-box>
+
+    <a-box position="0 0.72 0"
+           width="0.35" height="0.25" depth="0.35"
+           color="#111111"></a-box>
+
+    <a-text value="YSL"
+            position="0 0 0.19"
+            color="#111111"
+            align="center"
+            width="2"></a-text>
+
+    <a-text value="LIBRE"
+            position="0 -0.22 0.19"
+            color="#111111"
+            align="center"
+            width="1.5"></a-text>
+
   </a-entity>
 
-  <!-- SKY -->
-  <a-sky color="#e8e4e0"></a-sky>
+  <!-- GOLD DISPLAY LIGHT -->
+  <a-entity light="type: point; color: #f5d6a0; intensity: 1.8; distance: 9"
+            position="4.5 5 -15"></a-entity>
+
+  <!-- ================================================= -->
+  <!-- VIRTUAL SCENT PARTICLES -->
+  <!-- ================================================= -->
+
+  <a-entity id="scent-particles" visible="false">
+
+    <a-sphere position="3.5 2.7 -15"
+              radius="0.12"
+              color="#f5d6a0"
+              animation="property: position; to: 3 4 -15; dur: 2500; loop: true; dir: alternate">
+    </a-sphere>
+
+    <a-sphere position="5 2.8 -15"
+              radius="0.15"
+              color="#f5d6a0"
+              animation="property: position; to: 5.5 4.2 -15; dur: 3000; loop: true; dir: alternate">
+    </a-sphere>
+
+    <a-sphere position="4.5 3 -14.8"
+              radius="0.1"
+              color="#ffffff"
+              animation="property: position; to: 4.5 4.5 -14.8; dur: 2200; loop: true; dir: alternate">
+    </a-sphere>
+
+  </a-entity>
+
+  <!-- ================================================= -->
+  <!-- INTERACTIVE SCENT EXPERIENCE PANEL -->
+  <!-- ================================================= -->
+
+  <a-entity id="scent-panel"
+            position="0 2.8 -9"
+            visible="false">
+
+    <a-plane width="5" height="3"
+             color="#111111"
+             material="shader: flat"></a-plane>
+
+    <a-text value="YVES SAINT LAURENT"
+            position="0 1.05 0.02"
+            align="center"
+            color="#d6b77e"
+            width="5"></a-text>
+
+    <a-text value="LIBRE"
+            position="0 0.55 0.02"
+            align="center"
+            color="#ffffff"
+            width="7"></a-text>
+
+    <a-text value="EXPERIENCE THE FRAGRANCE"
+            position="0 0.1 0.02"
+            align="center"
+            color="#ffffff"
+            width="4"></a-text>
+
+    <a-text value="Lavender  |  Orange Blossom  |  Vanilla"
+            position="0 -0.4 0.02"
+            align="center"
+            color="#e3cda6"
+            width="3.8"></a-text>
+
+    <a-text value="Imagine the scent surrounding you."
+            position="0 -0.85 0.02"
+            align="center"
+            color="#ffffff"
+            width="3.5"></a-text>
+
+    <a-box close-experience
+           class="interactive"
+           position="0 -1.25 0.1"
+           width="1.5" height="0.3" depth="0.1"
+           color="#c5a36b"></a-box>
+
+    <a-text value="CLOSE"
+            position="0 -1.25 0.17"
+            align="center"
+            color="#111111"
+            width="2"></a-text>
+
+  </a-entity>
+
+  <!-- ================================================= -->
+  <!-- CAMERA AND NAVIGATION -->
+  <!-- ================================================= -->
+
+  <a-entity position="0 1.65 10">
+
+    <a-camera
+      wasd-controls="acceleration: 35"
+      look-controls
+      cursor="rayOrigin: mouse"
+      raycaster="objects: .interactive; far: 30">
+    </a-camera>
+
+  </a-entity>
+
+  <!-- ENVIRONMENT -->
+  <a-sky color="#f4f4f4"></a-sky>
 
 </a-scene>
 </body>
